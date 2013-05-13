@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="GBK"?>
+<!-- 业务系统 -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx" xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
+	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd"
+        default-autowire="byName" default-lazy-init="false">
+
+    <!-- 以 @Transactional 标注来定义事务 -->
+    <!--<tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true"/>-->
+
+     <!--基本事务定义,使用transactionManager作事务管理,默认get* find*方法的事务为readonly,其余方法按默认设置.-->
+             <!--默认的设置请参考Spring文档事务一章. -->
+    <tx:advice id="txAdvice" transaction-manager="transactionManager">
+        <tx:attributes>
+            <tx:method name="find*" read-only="true"/>
+            <tx:method name="get*" read-only="true"/>
+            <tx:method name="query*" read-only="true"/>
+            <tx:method name="search*" read-only="true"/>
+            <tx:method name="*" read-only="false"/>
+        </tx:attributes>
+    </tx:advice>
+
+    <!--&lt;!&ndash; 以AspectJ方式 定义 事务 &ndash;&gt;-->
+     <aop:config>
+         <aop:advisor pointcut="execution(* com.hibank.iccard.*.service..*.*(..))" advice-ref="txAdvice"/>
+     </aop:config>
+
+    <!-- component-scan自动搜索@Component , @Controller , @Service , @Repository等标注的类 -->
+    <context:component-scan base-package="com.**.service" />
+</beans>

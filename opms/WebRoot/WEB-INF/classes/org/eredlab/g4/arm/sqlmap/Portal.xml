@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="GBK" ?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<!-- 权限模型标签数据访问手工映射SQL语句 -->
+<sqlMap>
+    <typeAlias alias="dto" type="org.eredlab.g4.ccl.datastructure.impl.BaseDto"/>
+    <typeAlias alias="portalVo" type="org.eredlab.g4.arm.web.tag.vo.PortalVo"/>
+
+    <select id="queryPortletForUser" parameterClass="map" resultClass="portalVo">
+        SELECT a.portletid, a.userid, a.menuid, b.menuname title,b.iconcls,b.request url,a.height,a.sortno
+          FROM eaportal a left join eamenu b on a.menuid = b.menuid
+          where a.userid =#userid#
+          ORDER BY a.sortno asc
+    </select>
+
+    <insert id="savePortlet" parameterClass="dto">
+        INSERT INTO eaportal (portletid, userid, menuid,sortno)
+        VALUES (#portletid#, #userid#, #menuid#, #sortno#)
+    </insert>
+
+    <delete id="deletePortlet" parameterClass="dto">
+        DELETE FROM eaportal
+              WHERE userid = #userid# and menuid=#menuid#
+    </delete>
+
+    <update id="updatePortlet" parameterClass="dto">
+        UPDATE eaportal
+        <dynamic prepend="SET">
+            <isNotNull prepend="," property="height">
+                height = #height#
+            </isNotNull>
+            <isNotNull prepend="," property="sortno">
+                sortno = #sortno#
+            </isNotNull>
+        </dynamic>
+        WHERE userid = #userid# and menuid=#menuid#
+    </update>
+
+    <update id="updatePortletDelete" parameterClass="dto">
+         UPDATE eaportal set sortno = sortno-#col#
+         WHERE userid = #userid# and mod(sortno,#col#) = mod(#presortno#,#col#) and sortno>#presortno#
+    </update>
+
+    <update id="updatePortletAdd" parameterClass="dto">
+         UPDATE eaportal set sortno = sortno+#col#
+         WHERE userid = #userid# and mod(sortno,#col#) = mod(#sortno#,#col#) and sortno>=#sortno#
+    </update>
+
+    <update id="updatePortal" parameterClass="dto">
+          update eausersubinfo set portal = #portal# where userid = #userid#
+    </update>
+
+    <update id="updatePortletLayout" parameterClass="dto">
+         UPDATE eaportal set sortno = sortno-#col#
+         WHERE userid = #userid# and sortno-#col# not in (select sortno from eaportal where userid = #userid#)
+         and sortno-#col#>=0
+    </update>
+
+</sqlMap>

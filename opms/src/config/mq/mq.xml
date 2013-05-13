@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
+	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
+	
+<!-- 	<bean id="batchService" class="com.opms.batch.dwr.BatchService"/>  -->
+	<bean id="batchMsgClient" class="com.opms.batch.dwr.BatchMsgClient"/>
+		
+	<!-- 消息消费者 -->
+	<bean id="logbackMsgConsumer" class="com.opms.batch.mq.LogbackMsgConsumer"></bean>
+	<!-- 配置连接工厂 -->
+<!-- 	<bean id="queueConnectionFactory" class="org.apache.activemq.spring.ActiveMQConnectionFactory">   -->
+<!--     	<property name="userName" value="admin"></property> -->
+<!-- 		<property name="password" value="password"></property> -->
+<!--         <property name="brokerURL" value="tcp://127.0.0.1:61616" />   -->
+<!--         <property name="useAsyncSend" value="true" />   -->
+<!--     </bean> -->
+	<bean id="queueConnectionFactory" class="org.apache.activemq.spring.ActiveMQConnectionFactory">  
+    	<property name="userName" value="admin"></property>
+		<property name="password" value="admin"></property>
+        <property name="brokerURL" value="tcp://192.168.1.2:61616" />  
+        <property name="useAsyncSend" value="true" />  
+    </bean>
+    
+    <!-- 定义消息队列 -->  
+    <bean id="dest2" class="org.apache.activemq.command.ActiveMQQueue">  
+        <constructor-arg value="test.queue" />  
+    </bean>
+    
+	<!-- 消息监听容器 -->  
+<!--     <bean id="listenerContainer" class="org.springframework.jms.listener.DefaultMessageListenerContainer">     -->
+<!--         <property name="connectionFactory" ref="queueConnectionFactory" />     -->
+<!--         <property name="destination" ref="dest" />     -->
+<!--         <property name="messageListener" ref="msgConsumer" />     -->
+<!--     </bean> -->
+    
+    <!-- 消息监听容器 -->  
+    <bean id="listenerContainer2" class="org.springframework.jms.listener.DefaultMessageListenerContainer">    
+        <property name="connectionFactory" ref="queueConnectionFactory" />    
+        <property name="destination" ref="dest2" />    
+        <property name="messageListener" ref="logbackMsgConsumer" />    
+    </bean>
+    
+</beans>

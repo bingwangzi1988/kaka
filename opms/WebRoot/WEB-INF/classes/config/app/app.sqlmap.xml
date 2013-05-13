@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="GBK"?>
+<!DOCTYPE sqlMapConfig PUBLIC "-//iBATIS.com//DTD SQL Map Config 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-config-2.dtd">
+<!-- 业务系统的SQL映射文件装载 -->
+<sqlMapConfig>
+    <!--<sqlMap resource="com/company/project/sqlmap/CusBasicInfoSqlMap.xml"/>-->
+    <!--<sqlMap resource="com/company/project/sqlmap/CfsFeeInfoSqlMap.xml"/>-->
+</sqlMapConfig>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<HostCfg>
+	<BatchHostCfg>
+		<Host id="localhost" ip="192.168.1.166" port="12224"></Host>
+		<Host id="testhost" ip="192.168.1.2" port="12224"></Host>
+	</BatchHostCfg>
+</HostCfg>

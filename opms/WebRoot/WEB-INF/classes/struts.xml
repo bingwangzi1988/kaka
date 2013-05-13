@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN"
+        "http://struts.apache.org/dtds/struts-2.1.dtd">
+
+<struts>
+    <constant name="struts.devMode" value="false"/>
+    <constant name="struts.multipart.maxSize" value="20971520"/>
+    <package name="extjs" extends="json-default" namespace="/">
+        <!--<global-exception-mappings>   -->
+        <!--<exception-mapping result="error" exception="java.lang.Exception">-->
+        <!--</exception-mapping>-->
+        <!--</global-exception-mappings>-->
+
+        <!--<default-interceptor-ref name="mydefault"/>-->
+
+        <interceptors>
+            <!--定义一个名为authority的拦截器-->
+            <interceptor class="com.config.AuthorityInterceptor" name="authority"/>
+
+            <interceptor-stack name="appDefaultStack">
+                <interceptor-ref name="defaultStack">
+                    <param name="exception.logEnabled">true</param>
+                    <param name="exception.logLevel">error</param>
+                </interceptor-ref>
+                <interceptor-ref name="authority"/>
+            </interceptor-stack>
+        </interceptors>
+
+        <default-interceptor-ref name="appDefaultStack"/>
+
+        <!--定义全局Result-->
+        <global-results>
+            <result name="login">/login.jsp</result>
+        </global-results>
+
+        <action name="MenuTree" class="com.common.business.commonaction.MenuTree">
+            <result type="json">
+                <param name="root">resultArray</param>
+            </result>
+        </action>
+        
+        <action name="PortalAction*" class="com.common.business.commonaction.PortalAction" method="{1}">
+            <result type="json">
+                <param name="root">resultArray</param>
+            </result>
+        </action>
+
+        <action name="CodeGen*" class="org.codegen.CodeGenAction" method="{1}">
+            <result type="json">
+                <param name="root">resultArray</param>
+            </result>
+        </action>
+
+        <action name="codeSelect" class="com.common.business.commonaction.CodeSelectAction">
+            <result type="json">
+                <param name="root">resultArray</param>
+            </result>
+        </action>
+    </package>
+
+    <package name="custom" extends="extjs" namespace="/common">
+        <action name="codeSelect" class="com.common.business.commonbus.action.CodeSelectAction">
+            <result type="json">
+                <param name="root">resultArray</param>
+            </result>
+        </action>
+        <action name="codeSelect_*" method="{1}" class="com.common.business.commonbus.action.CodeSelectAction">
+            <result type="json">
+                <param name="root">resultArray</param>
+            </result>
+        </action>
+
+    </package>
+    
+    <package name="osgi" extends="extjs" namespace="/jsp/osgi">
+        <action name="*_*" method="{2}" class="com.opms.osgi.action.{1}Action">
+            <result type="json">
+          		<param name="contentType">text/html</param>
+                <param name="root">resultJson</param>
+            </result>
+        </action>
+    </package>
+
+	<package name="batch" extends="extjs" namespace="/jsp/batch">
+        <action name="*_*" method="{2}" class="com.opms.batch.action.{1}Action">
+            <result type="json">
+                <param name="root">resultJson</param>
+            </result>
+        </action>
+    </package>
+    
+    <package name="conmg" extends="extjs" namespace="/jsp/conmg">
+        <action name="*_*" method="{2}" class="com.opms.conmg.action.{1}Action">
+            <result type="json">
+                <param name="root">resultJson</param>
+            </result>
+        </action>
+    </package>    
+<!--     <package name="cardkind" extends="extjs" namespace="/jsp/cardkind"> -->
+<!--         <action name="*_*" method="{2}" class="com.hibank.iccard.cardkind.action.{1}Action"> -->
+<!--             <result type="json"> -->
+<!--                 <param name="root">resultJson</param> -->
+<!--             </result> -->
+<!--         </action> -->
+<!--     </package> -->
+    
+<!--     <package name="card" extends="extjs" namespace="/jsp/cardkind">-->
+<!--        <action name="*_*" method="{2}" class="com.hibank.iccard.search.action.{1}Action">-->
+<!--            <result type="json">-->
+<!--                <param name="root">resultJson</param>-->
+<!--            </result>-->
+<!--        </action>-->
+<!--    </package> -->
+    
+<!--     <package name="dict" extends="extjs" namespace="/jsp/dict"> -->
+<!--         <action name="*_*" method="{2}" class="com.hibank.iccard.dict.action.{1}Action"> -->
+<!--             <result type="json"> -->
+<!--                 <param name="root">resultJson</param> -->
+<!--             </result> -->
+<!--         </action> -->
+<!--     </package>        -->
+<!--     <package name="issuer" extends="extjs" namespace="/jsp/issuer"> -->
+<!--         <action name="*_*" method="{2}" class="com.hibank.iccard.issuer.action.{1}Action"> -->
+<!--             <result type="json"> -->
+<!--                 <param name="root">resultJson</param> -->
+<!--             </result> -->
+<!--         </action> -->
+<!--     </package> -->
+<!--     <package name="cardComp" extends="extjs" namespace="/jsp/cardComp"> -->
+<!--         <action name="*_*" method="{2}" class="com.hibank.iccard.cardComp.action.{1}Action"> -->
+<!--             <result type="json"> -->
+<!--                 <param name="root">resultJson</param> -->
+<!--             </result> -->
+<!--         </action> -->
+<!--     </package> -->
+<!--     <package name="batch" extends="extjs" namespace="/jsp/batch"> -->
+<!--         <action name="*_*" method="{2}" class="com.hibank.iccard.batch.action.{1}Action"> -->
+<!--             <result type="json"> -->
+<!--                 <param name="root">resultJson</param> -->
+<!--             </result> -->
+<!--         </action> -->
+<!--     </package> -->
+<!--     <package name="reconciliation" extends="extjs" namespace="/jsp/reconciliation"> -->
+<!--         <action name="*_*" method="{2}" class="com.hibank.iccard.reconciliation.action.{1}Action"> -->
+<!--             <result type="json"> -->
+<!--                 <param name="root">resultJson</param> -->
+<!--             </result> -->
+<!--         </action> -->
+<!--     </package> -->
+<!--     <package name="search" extends="extjs" namespace="/jsp/search"> -->
+<!--         <action name="*_*" method="{2}" class="com.hibank.iccard.search.action.{1}Action"> -->
+<!--             <result type="json"> -->
+<!--                 <param name="root">resultJson</param> -->
+<!--             </result> -->
+<!--         </action> -->
+<!--     </package>    -->
+    <package name="common" extends="extjs" namespace="/jsp/common">
+    	<action name="ExportExcel_*" method="{1}" class="com.common.action.ExportExcelAction">
+        	<result type="json">
+                <param name="root">resultJson</param>
+            </result>
+        </action>
+        <action name="FileUpload_*" method="{1}" class="com.common.action.FileUploadAction">
+        	<result type="json">
+        		<param name="contentType">text/html</param>
+                <param name="root">resultJson</param>
+            </result>
+        </action>
+        <action name="Authorization_*" method="{1}" class="com.common.action.AuthorizationAction">
+        	<result type="json">
+                <param name="root">resultJson</param>
+            </result>
+        </action>
+    </package> 
+    
+<!--     <package name="iccard" extends="extjs" namespace="/"> -->
+    
+<!--     	<action name="myTicKindConf_*" method="{1}" class="com.hibank.iccard.search.action.MyTicKindConfAction"> -->
+<!--     		<result type="json"> -->
+<!--                 <param name="root">resultJson</param> -->
+<!--             </result> -->
+<!--     	</action> -->
+    
+<!--     	<action name="testtic" class="com.hibank.iccard.search.action.MyTicKindConfAction"> -->
+<!--     		<result name="success">/test/testtable.jsp</result> -->
+<!--     	</action> -->
+    	
+<!--    	<action name="ticTemplateDef_*" class="com.hibank.iccard.test2.action.TicTemplateDefAction" method="{1}">-->
+<!--    		<result type="json">-->
+<!--                <param name="root">resultJson</param>-->
+<!--            </result>-->
+<!--    	</action>-->
+<!--     	<action name="ticTemplateDeflist" class="com.hibank.iccard.test2.action.TicTemplateDefAction" method="list"> -->
+<!--     		<result type="json"> -->
+<!--                 <param name="root">resultJson</param> -->
+<!--             </result> -->
+<!--     	</action> -->
+<!--     	<action name="ticTemplateDeffind" class="com.hibank.iccard.test2.action.TicTemplateDefAction" method="find"> -->
+<!--     		<result type="json"> -->
+<!--                 <param name="root">resultJson</param> -->
+<!--             </result> -->
+<!--     	</action> -->
+<!--     	<action name="ticTemplateDefsave" class="com.hibank.iccard.test2.action.TicTemplateDefAction" method="save"> -->
+<!--     		<result type="json"> -->
+<!--                 <param name="root">resultJson</param> -->
+<!--             </result> -->
+<!--     	</action> -->
+<!--     	<action name="ticTemplateDefdelete" class="com.hibank.iccard.test2.action.TicTemplateDefAction" method="delete"> -->
+<!--     		<result type="json"> -->
+<!--                 <param name="root">resultJson</param> -->
+<!--             </result> -->
+<!--     	</action> -->
+    	
+<!--     </package> -->
+    
+</struts>

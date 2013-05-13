@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd"
+        default-autowire="byName" default-lazy-init="false">
+
+    <!--Hibernate Annotation SessionFatory-->
+    <bean id="sessionFactory" class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
+        <property name="dataSource" ref="dataSourceG4"/>
+        <!--<property name="mappingLocations" value="classpath*:com/creawor/demo/model/*.hbm.xml"/>-->
+
+        <!-- packagesToScan可以自动搜索某个package的全部标记@Entity class -->
+        <property name="packagesToScan">
+            <list>
+                <value>com.**.po</value>
+            </list>
+        </property>
+        <property name="hibernateProperties">
+            <props>
+                <!--常用数据库方言 MySQL5Dialect,SQLServerDialect,OracleDialect,SybaseDialect,DB2Dialect -->
+                <prop key="hibernate.dialect">com.common.base.Oracle10gDialect</prop>
+                <prop key="hibernate.show_sql">true</prop>
+                <!--<prop key="hibernate.query.substitutions">true 1, false 0</prop>-->
+                <prop key="hibernate.default_batch_fetch_size">4</prop>
+            </props>
+        </property>
+    </bean>
+
+    <!--Hibernate TransactionManager-->
+    <bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+
+    <!-- component-scan自动搜索@Component , @Controller , @Service , @Repository等标注的类 -->
+    <context:component-scan base-package="com.**.dao"/>
+</beans>
