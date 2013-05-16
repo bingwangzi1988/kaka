@@ -262,11 +262,7 @@ public class OpmsBundleMngAction extends BaseAction {
 			String bundleType = request.getParameter("bundleType");
 			String bundleId = request.getParameter("bundleId");
 			String startFlag = request.getParameter("startFlag");
-			// request.setCharacterEncoding("GBK");
 			String fname=URLDecoder.decode(uploadFileName, "utf-8");
-//			request.setCharacterEncoding(PropertiesContext.getProjectEncoding());
-//			String fname = URLDecoder.decode(fileName,
-//					PropertiesContext.getProjectEncoding());
 
 			if (fname.indexOf("\\") != -1) {
 				fname = fname.substring(fname.lastIndexOf("\\") + 1,
@@ -288,8 +284,10 @@ public class OpmsBundleMngAction extends BaseAction {
 			FileTransferClient.uploadFile(hostIp, hostPort, upload, url);
 		
 			if(bundleId != null && !"".equals(bundleId)) {
+				// 更新组件(需要校验组件名)
 				BundleAdminClient.getBundleAdmin(hostIp, hostPort).replaceBundle(bundleId, url);
 			} else {
+				// 安装组件(需要校验组件是否已进行配置管理)
 				if("true".equals(startFlag)) {
 					BundleAdminClient.getBundleAdmin(hostIp, hostPort).installAndStartBundle(url);
 				} else {

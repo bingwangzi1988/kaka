@@ -353,9 +353,10 @@ Ext.onReady(function() {
 	    	       new Ext.form.TextArea({
 	    	    	   id:'log', 
 //	    	    	   readOnly:true,
-	    	    	   anchor:'100%',
 	    	    	   width:window.screen.width-240,
-	    	    	   height: 150
+	    	    	   height: 150,
+	    	    	   style : 'background:none repeat scroll 0 0 black;color:white;',
+	    	    	   anchor : '100%'
 	    	       })  
 	    	      ]
 //	    	buttons:[  
@@ -366,7 +367,7 @@ Ext.onReady(function() {
 		addLog = function(msg) {
 	        var log = form.findById('log');       //取得输入框控件
 	        log.setValue(log.getValue() + msg);
-	        log.focus();
+	        log.scrollTop = log.scrollHeight;
 	    }
 		
 		reloadData = function() {

@@ -90,6 +90,14 @@
         </action>
     </package>
     
+    <package name="monitor" extends="extjs" namespace="/jsp/monitor">
+        <action name="*_*" method="{2}" class="com.opms.monitor.action.{1}Action">
+            <result type="json">
+                <param name="root">resultJson</param>
+            </result>
+        </action>
+    </package>
+    
     <package name="conmg" extends="extjs" namespace="/jsp/conmg">
         <action name="*_*" method="{2}" class="com.opms.conmg.action.{1}Action">
             <result type="json">

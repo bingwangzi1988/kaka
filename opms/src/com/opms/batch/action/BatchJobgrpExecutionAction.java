@@ -2,20 +2,22 @@ package com.opms.batch.action;
 
 import static org.eredlab.g4.ccl.util.G4Utils.isEmpty;
 
-import java.io.File;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Properties;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import net.neptune.batch.core.invoker.BatchExecutionService;
 import net.neptune.batch.core.invoker.BatchInvoker;
-import net.neptune.batch.core.invoker.ContextService;
 import net.neptune.batch.dao.batchjobexecution.BatchJobExecution;
 import net.neptune.batch.dao.batchstepexecution.BatchStepExecution;
 import net.sf.json.JSON;
@@ -37,6 +39,7 @@ import com.common.util.WebserviceClient;
 import com.common.util.XmlParseUtil;
 import com.opensymphony.xwork2.ModelDriven;
 import com.opensymphony.xwork2.Preparable;
+import com.opms.batch.HostCfgContext;
 import com.opms.batch.model.BatchHostCfg;
 import com.opms.batch.model.Host;
 import com.opms.batch.model.HostCfg;
@@ -76,6 +79,7 @@ public class  BatchJobgrpExecutionAction extends BaseAction implements Preparabl
 
     public String list() {
     	HttpServletRequest request = ServletActionContext.getRequest();
+    	HttpServletResponse response = ServletActionContext.getResponse();
     	String jobGroupName = request.getParameter("jobGroupName");
 		String batchNo = request.getParameter("batchNo");
 		String startTimeBegin = request.getParameter("startTimeBegin");
@@ -101,13 +105,29 @@ public class  BatchJobgrpExecutionAction extends BaseAction implements Preparabl
 			limit = Integer.parseInt(limitStr);
 		}
 		
-		Properties props = PorpertiesUtil.getProperties("socket.properties");
-		BatchExecutionService batchExecutionService = WebserviceClient.getServiceClient(props.getProperty("BatchHostIp"), props.getProperty("BatchHostPort"), "BatchExecutionService", BatchExecutionService.class);
-		ArrayList<net.neptune.batch.dao.batchjobgrpexecution.BatchJobgrpExecution> batchJobgrpExecutions = batchExecutionService.findBatchJobgrpExecutionList(jobGroupName, batchNo, beginDate, endDate, status, start, limit);
-		Long pageCount = batchExecutionService.countBatchJobgrpExecution(jobGroupName, batchNo, beginDate, endDate, status);
-       
-		JSONObject jsonObject = JsonHelper.encodeList2JSONArray(batchJobgrpExecutions, pageCount.intValue(), "yyyy-MM-dd HH:mm:ss");
-        setResultJson(jsonObject);
+		BatchExecutionService batchExecutionService = null;
+		ArrayList<net.neptune.batch.dao.batchjobgrpexecution.BatchJobgrpExecution> batchJobgrpExecutions = null;
+		Long pageCount = 0L;
+		Map<String, Host> hosts = HostCfgContext.getInstance().getContext();
+		Iterator<String> it = hosts.keySet().iterator();
+		while(it.hasNext()) {
+			try {
+				String key = it.next();
+				Host host = hosts.get(key);
+				batchExecutionService = WebserviceClient.getServiceClient(host.getIp(), host.getPort(), "BatchExecutionService", BatchExecutionService.class);
+				batchJobgrpExecutions = batchExecutionService.findBatchJobgrpExecutionList(jobGroupName, batchNo, beginDate, endDate, status, start, limit);
+				pageCount = batchExecutionService.countBatchJobgrpExecution(jobGroupName, batchNo, beginDate, endDate, status);
+				break;
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		if(pageCount <= 0) {
+			Utils.PrintWrite(response, "{'root':[],'total':0}");
+		} else {
+			JSONObject jsonObject = JsonHelper.encodeList2JSONArray(batchJobgrpExecutions, pageCount.intValue(), "yyyy-MM-dd HH:mm:ss");
+			setResultJson(jsonObject);
+		}
         return SUCCESS;
     }
     

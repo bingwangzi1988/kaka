@@ -6,7 +6,6 @@
 	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
 	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
 	
-<!-- 	<bean id="batchService" class="com.opms.batch.dwr.BatchService"/>  -->
 	<bean id="batchMsgClient" class="com.opms.batch.dwr.BatchMsgClient"/>
 		
 	<!-- 消息消费者 -->
@@ -26,8 +25,8 @@
     </bean>
     
     <!-- 定义消息队列 -->  
-    <bean id="dest2" class="org.apache.activemq.command.ActiveMQQueue">  
-        <constructor-arg value="test.queue" />  
+    <bean id="dest" class="org.apache.activemq.command.ActiveMQQueue">  
+        <constructor-arg value="batch.queue" />  
     </bean>
     
 	<!-- 消息监听容器 -->  
@@ -38,9 +37,9 @@
 <!--     </bean> -->
     
     <!-- 消息监听容器 -->  
-    <bean id="listenerContainer2" class="org.springframework.jms.listener.DefaultMessageListenerContainer">    
+    <bean id="listenerContainer" class="org.springframework.jms.listener.DefaultMessageListenerContainer">    
         <property name="connectionFactory" ref="queueConnectionFactory" />    
-        <property name="destination" ref="dest2" />    
+        <property name="destination" ref="dest" />    
         <property name="messageListener" ref="logbackMsgConsumer" />    
     </bean>
     

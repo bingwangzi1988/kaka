@@ -1,6 +1,7 @@
 package org.eredlab.g4.ccl.util;
 
 import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.security.MessageDigest;
 import java.security.SecureRandom;
@@ -136,6 +137,10 @@ public class G4Utils {
 			}
 		}
 		return true;
+	}
+	
+	public static BigDecimal getRandom(int start, int end) {
+		return new BigDecimal(start + Math.random() * end);
 	}
 
 	/**
