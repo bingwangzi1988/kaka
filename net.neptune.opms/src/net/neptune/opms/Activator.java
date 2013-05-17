@@ -9,6 +9,7 @@ import org.springframework.osgi.context.BundleContextAware;
 
 import net.neptune.opms.impl.BundleAdminImpl;
 import net.neptune.opms.impl.FileTransferServiceImpl;
+import net.neptune.opms.impl.SysResourceServiceImpl;
 
 public class Activator implements BundleContextAware, CommandProvider {
 
@@ -23,6 +24,7 @@ public class Activator implements BundleContextAware, CommandProvider {
 	public void _webservice(CommandInterpreter ci) throws Exception{
 		Endpoint.publish("http://" + hostIp + ":" + hostPort + "/BundleAdmin", new BundleAdminImpl());
 		Endpoint.publish("http://" + hostIp + ":" + hostPort + "/FileTransferService", new FileTransferServiceImpl());
+		Endpoint.publish("http://" + hostIp + ":" + hostPort + "/SysResourceService", new SysResourceServiceImpl());
 	}
 	
 	public String getHostIp() {

@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Properties;
 
 import net.neptune.opms.model.CPUInfo;
+import net.neptune.opms.model.JAVAInfo;
 import net.neptune.opms.model.MEMInfo;
 import net.neptune.opms.model.OSInfo;
 
@@ -31,6 +32,23 @@ import org.hyperic.sigar.Who;
  * 2013-5-15 下午4:44:14
  */
 public class SysResourceUtil {
+	
+	/**
+	 * 获取当前JVM信息
+	 */
+	public static JAVAInfo getJavaInfo() throws UnknownHostException {
+		JAVAInfo javaInfo = new JAVAInfo();
+		Runtime r = Runtime.getRuntime();
+		Properties props = System.getProperties();
+		javaInfo.setJvmTotalMemory(r.totalMemory());
+		javaInfo.setJvmFreeMemory(r.freeMemory());
+		javaInfo.setAvailableProcessors(r.availableProcessors());
+		javaInfo.setVersion(props.getProperty("java.version"));
+		javaInfo.setVendor(props.getProperty("java.vendor"));
+		javaInfo.setVendorUrl(props.getProperty("java.vendor.url"));
+		javaInfo.setHome(props.getProperty("java.home"));
+		return javaInfo;
+	}
 	
 	/**
 	 * 获取当前操作系统信息

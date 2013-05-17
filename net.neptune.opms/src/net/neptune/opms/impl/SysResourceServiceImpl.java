@@ -10,13 +10,8 @@ import net.neptune.opms.model.MEMInfo;
 import net.neptune.opms.model.OSInfo;
 import net.neptune.opms.util.SysResourceUtil;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 @WebService(endpointInterface="net.neptune.opms.SysResourceService") 
 public class SysResourceServiceImpl implements SysResourceService {
-
-	Logger logger = LoggerFactory.getLogger(SysResourceServiceImpl.class);
 
 	@Override
 	public OSInfo getOSInf() {

@@ -13,6 +13,6 @@
 		width="480" height="250" align="center" visible="false" />
 </eRedG4:body>
 <eRedG4:script>
-<!-- var jsonInfo = <eRedG4:out key="jsonInfo" scope="request" />; -->
+var jsonInfo = <eRedG4:out key="jsonInfo" scope="request" />;
 </eRedG4:script>
 </eRedG4:html>

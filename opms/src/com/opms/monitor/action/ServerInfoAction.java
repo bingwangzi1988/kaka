@@ -3,12 +3,19 @@ package com.opms.monitor.action;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 import java.math.BigDecimal;
+import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import net.neptune.batch.core.invoker.BatchExecutionService;
+import net.neptune.opms.SysResourceService;
+import net.neptune.opms.model.CPUInfo;
+import net.neptune.opms.model.MEMInfo;
+import net.neptune.opms.model.OSInfo;
 import net.sf.json.JSON;
 
 import org.apache.struts2.ServletActionContext;
@@ -24,7 +31,9 @@ import sun.management.ManagementFactory;
 
 import com.common.base.BaseAction;
 import com.common.util.G4Constants;
+import com.common.util.PorpertiesUtil;
 import com.common.util.Utils;
+import com.common.util.WebserviceClient;
 import com.sun.management.OperatingSystemMXBean;
 
 /**
@@ -53,38 +62,41 @@ public class ServerInfoAction extends BaseAction {
 	 * 页面初始化
 	 * 
 	 */
-//	public ActionForward init(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-//			HttpServletResponse response) throws Exception {
-//		OperatingSystemMXBean osmxb = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
-//		removeSessionAttribute(request, "JVM_MEM_LIST");
-//		removeSessionAttribute(request, "HOST_MEM_LIST");
-//		removeSessionAttribute(request, "HOST_CPU_LIST");
-//		InetAddress localhost = InetAddress.getLocalHost();
-//		Dto outDto = new BaseDto();
-//		outDto.put("a.操作系统", System.getProperty("os.name") + "_" + System.getProperty("os.arch"));
-//		outDto.put("b.主机IP", "" + localhost.getHostAddress());
+	public String init() throws Exception {
+		HttpServletRequest request = ServletActionContext.getRequest();
+		HttpServletResponse response = ServletActionContext.getResponse();
+		OperatingSystemMXBean osmxb = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
+		removeSessionAttribute(request, "JVM_MEM_LIST");
+		removeSessionAttribute(request, "HOST_MEM_LIST");
+		removeSessionAttribute(request, "HOST_CPU_LIST");
+		InetAddress localhost = InetAddress.getLocalHost();
+		Dto outDto = new BaseDto();
+		outDto.put("a.操作系统", System.getProperty("os.name") + "_" + System.getProperty("os.arch"));
+		outDto.put("b.主机IP", "" + localhost.getHostAddress());
 //		outDto.put("c.应用服务器", getServlet().getServletContext().getServerInfo());
-//		outDto.put("d.监听端口", request.getServerPort());
+		outDto.put("d.监听端口", request.getServerPort());
 //		outDto.put("e.Web根路径", getServlet().getServletContext().getRealPath("/"));
 //		outDto.put("f.Servlet版本", getServlet().getServletContext().getMajorVersion() + "."
 //				+ getServlet().getServletContext().getMinorVersion());
-//		outDto.put("g.JVM版本", System.getProperty("java.version"));
-//		outDto.put("h.JVM提供商", System.getProperty("java.vendor"));
-//		outDto.put("i.JVM安装路径", System.getProperty("java.home"));
-//		outDto.put("j.主机物理内存", osmxb.getTotalSwapSpaceSize() / 1024 / 1024 + "M");
-//		outDto.put("k.JVM可用最大内存", Runtime.getRuntime().maxMemory() / 1024 / 1024 + "M");
-//		request.setAttribute("jsonInfo", outDto.toJson());
-//
-//		String caption = "JVM内存使用情况实时监控图(";
-//		caption = caption + "可分配总内存:" + new Double(Runtime.getRuntime().maxMemory() / 1024 / 1024).intValue() + "M ";
-//		caption = caption + "已分配总内存:" + new Double(Runtime.getRuntime().totalMemory() / 1024 / 1024).intValue() + "M ";
-//		caption = caption
-//				+ "已用内存:"
-//				+ new Double((Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1024 / 1024)
-//						.intValue() + "M)";
-//		// updateJvmChart(mapping, form, request, response);
-//		return mapping.findForward("serverInfoView");
-//	}
+		outDto.put("g.JVM版本", System.getProperty("java.version"));
+		outDto.put("h.JVM提供商", System.getProperty("java.vendor"));
+		outDto.put("i.JVM安装路径", System.getProperty("java.home"));
+		outDto.put("j.主机物理内存", osmxb.getTotalSwapSpaceSize() / 1024 / 1024 + "M");
+		outDto.put("k.JVM可用最大内存", Runtime.getRuntime().maxMemory() / 1024 / 1024 + "M");
+		String json = outDto.toJson();
+		System.out.println("JSON: " + json);
+		request.setAttribute("jsonInfo", outDto.toJson());
+
+		String caption = "JVM内存使用情况实时监控图(";
+		caption = caption + "可分配总内存:" + new Double(Runtime.getRuntime().maxMemory() / 1024 / 1024).intValue() + "M ";
+		caption = caption + "已分配总内存:" + new Double(Runtime.getRuntime().totalMemory() / 1024 / 1024).intValue() + "M ";
+		caption = caption
+				+ "已用内存:"
+				+ new Double((Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1024 / 1024)
+						.intValue() + "M)";
+		// updateJvmChart(mapping, form, request, response);
+		return SUCCESS;
+	}
 	
 	/**
 	 * 更新CPU监控图
@@ -92,8 +104,16 @@ public class ServerInfoAction extends BaseAction {
 	 */
 	@SuppressWarnings("unchecked")
 	public String updateCpuChart() throws Exception {
+		
+    	SysResourceService sysResourceService = WebserviceClient.getServiceClient("192.168.1.2", "22225", "SysResourceService", SysResourceService.class);
+		OSInfo osInfo = sysResourceService.getOSInf();
+		MEMInfo memInfo = sysResourceService.getMemInfo();
+		ArrayList<CPUInfo> cpuInfos = sysResourceService.getCpuInfo();
+		
 		HttpServletRequest request = ServletActionContext.getRequest();
 		HttpServletResponse response = ServletActionContext.getResponse();
+		
+		String ip = request.getParameter("ip");
 		
 		GraphConfig graphConfig = new GraphConfig();
 		graphConfig.put("divLineColor", "44AF31");
