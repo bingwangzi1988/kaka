@@ -1,4 +1,4 @@
-package com.opms.osgi.vo;
+package com.opms.conmg.vo;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
@@ -19,8 +19,8 @@ public class OpmsHostCfgQuery implements Serializable {
 	private java.lang.String hostIp;
 	/** 主机端口 */
 	private java.math.BigDecimal hostPort;
-	/** 开启标志 */
-	private java.lang.String state;
+	/** 类型（0：组件及监控管理；1：批量） */
+	private java.lang.String cfgType;
 
 	public java.lang.String getId() {
 		return this.id;
@@ -54,12 +54,12 @@ public class OpmsHostCfgQuery implements Serializable {
 		this.hostPort = value;
 	}
 	
-	public java.lang.String getState() {
-		return this.state;
+	public java.lang.String getCfgType() {
+		return this.cfgType;
 	}
 	
-	public void setState(java.lang.String value) {
-		this.state = value;
+	public void setCfgType(java.lang.String value) {
+		this.cfgType = value;
 	}
 	
 

@@ -1,27 +1,25 @@
-package com.opms.osgi.action;
-
-import static org.eredlab.g4.ccl.util.G4Utils.isEmpty;
-
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-
-import net.sf.json.JSON;
-import net.sf.json.JSONObject;
-
-import org.apache.struts2.ServletActionContext;
-import org.eredlab.g4.bmf.util.SpringBeanLoader;
-import org.eredlab.g4.ccl.json.JsonHelper;
+package com.opms.conmg.action;
 
 import com.common.base.BaseAction;
 import com.common.util.CountOrder;
 import com.common.util.CountOrderUtil;
 import com.common.util.QueryUitl;
+import com.opms.conmg.po.OpmsHostCfg;
+import com.opms.conmg.service.OpmsHostCfgService;
+import com.opms.conmg.vo.OpmsHostCfgQuery;
 import com.opensymphony.xwork2.ModelDriven;
 import com.opensymphony.xwork2.Preparable;
-import com.opms.osgi.po.OpmsHostCfg;
-import com.opms.osgi.service.OpmsHostCfgService;
-import com.opms.osgi.vo.OpmsHostCfgQuery;
+import net.sf.json.JSON;
+import net.sf.json.JSONObject;
+import org.apache.commons.lang.StringUtils;
+import org.apache.struts2.ServletActionContext;
+import org.eredlab.g4.bmf.util.SpringBeanLoader;
+import org.eredlab.g4.ccl.json.JsonHelper;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.List;
+
+import static org.eredlab.g4.ccl.util.G4Utils.isEmpty;
 
 
 public class  OpmsHostCfgAction extends BaseAction implements Preparable,ModelDriven{
@@ -77,7 +75,7 @@ public class  OpmsHostCfgAction extends BaseAction implements Preparable,ModelDr
         {
            if(isEmpty(opmsHostCfg.getId()))
             opmsHostCfg.setId(null);
-            String unique0 = opmsHostCfgService.isUnique(opmsHostCfg, "hostName", "主机名");
+            String unique0 = opmsHostCfgService.isUnique(opmsHostCfg, "hostIp,hostPort", "主机IP,主机端口");
             if (unique0 != null) {
                 returnObject.put("SUCCESS", false);
                 returnObject.put("msg", unique0);

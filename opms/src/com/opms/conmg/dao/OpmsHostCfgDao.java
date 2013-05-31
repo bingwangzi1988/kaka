@@ -1,22 +1,22 @@
-package com.opms.osgi.dao;
+package com.opms.conmg.dao;
 
-import static org.eredlab.g4.ccl.util.G4Utils.isNotEmpty;
-
-import java.util.List;
-
+import com.common.base.BaseHibernateDao;
+import com.common.util.CountOrder;
+import com.opms.conmg.po.OpmsHostCfg;
+import com.opms.conmg.vo.OpmsHostCfgQuery;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.transform.Transformers;
 import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.stereotype.Repository;
 
-import com.common.base.BaseHibernateDao;
-import com.common.util.CountOrder;
-import com.opms.osgi.po.OpmsHostCfg;
-import com.opms.osgi.vo.OpmsHostCfgQuery;
+import java.util.List;
+
+import static org.eredlab.g4.ccl.util.G4Utils.isNotEmpty;
 
 @Repository
 public class OpmsHostCfgDao extends BaseHibernateDao<OpmsHostCfg,String>{
@@ -35,8 +35,11 @@ public class OpmsHostCfgDao extends BaseHibernateDao<OpmsHostCfg,String>{
         if(isNotEmpty(opmsHostCfg.getHostIp())) {
               criteria.add(Restrictions.like("hostIp", "%"+opmsHostCfg.getHostIp()+"%"));
         }
-        if(isNotEmpty(opmsHostCfg.getState())) {
-              criteria.add(Restrictions.like("state", "%"+opmsHostCfg.getState()+"%"));
+        if(isNotEmpty(opmsHostCfg.getHostPort())) {
+            criteria.add(Restrictions.eq("hostPort", opmsHostCfg.getHostPort()));
+        }
+        if(isNotEmpty(opmsHostCfg.getCfgType())) {
+            criteria.add(Restrictions.eq("cfgType", opmsHostCfg.getCfgType()));
         }
                 if(isNotEmpty(countOrder)) {
                    criteria.setFirstResult(countOrder.getStart());
@@ -63,8 +66,11 @@ public class OpmsHostCfgDao extends BaseHibernateDao<OpmsHostCfg,String>{
         if(isNotEmpty(opmsHostCfg.getHostIp())) {
               criteria.add(Restrictions.like("hostIp", "%"+opmsHostCfg.getHostIp()+"%"));
         }
-        if(isNotEmpty(opmsHostCfg.getState())) {
-              criteria.add(Restrictions.like("state", "%"+opmsHostCfg.getState()+"%"));
+        if(isNotEmpty(opmsHostCfg.getHostPort())) {
+            criteria.add(Restrictions.eq("hostPort", opmsHostCfg.getHostPort()));
+        }
+        if(isNotEmpty(opmsHostCfg.getCfgType())) {
+            criteria.add(Restrictions.eq("cfgType", opmsHostCfg.getCfgType()));
         }
                 criteria.setProjection(Projections.rowCount());
                 return criteria.list();

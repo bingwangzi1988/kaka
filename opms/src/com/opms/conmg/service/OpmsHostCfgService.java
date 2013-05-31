@@ -1,11 +1,11 @@
-package com.opms.osgi.service;
-
-import java.util.List;
+package com.opms.conmg.service;
 
 import com.common.base.BaseService;
 import com.common.util.CountOrder;
-import com.opms.osgi.po.OpmsHostCfg;
-import com.opms.osgi.vo.OpmsHostCfgQuery;
+import com.opms.conmg.po.OpmsHostCfg;
+import com.opms.conmg.vo.OpmsHostCfgQuery;
+
+import java.util.List;
 
 public interface OpmsHostCfgService extends BaseService<OpmsHostCfg,String>{
 

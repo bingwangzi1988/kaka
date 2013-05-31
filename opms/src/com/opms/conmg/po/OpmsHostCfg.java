@@ -1,4 +1,4 @@
-package com.opms.osgi.po;
+package com.opms.conmg.po;
 
 import cn.org.rapid_framework.util.DateConvertUtils;
 import com.common.base.BaseEntity;
@@ -22,7 +22,7 @@ public class OpmsHostCfg extends BaseEntity implements java.io.Serializable{
 	public static final String ALIAS_HOST_NAME = "主机名";
 	public static final String ALIAS_HOST_IP = "主机IP";
 	public static final String ALIAS_HOST_PORT = "主机端口";
-	public static final String ALIAS_STATE = "开启标志";
+	public static final String ALIAS_CFG_TYPE = "类型（0：组件及监控管理；1：批量）";
 	
 	//date formats
 	
@@ -50,10 +50,10 @@ public class OpmsHostCfg extends BaseEntity implements java.io.Serializable{
 	@NotNull 
 	private java.math.BigDecimal hostPort;
     /**
-     * 开启标志       db_column: STATE 
+     * 类型（0：组件及监控管理；1：批量）       db_column: CFG_TYPE 
      */ 	
 	@NotBlank @Length(max=1)
-	private java.lang.String state;
+	private java.lang.String cfgType;
 	//columns END
 
 
@@ -106,13 +106,13 @@ public class OpmsHostCfg extends BaseEntity implements java.io.Serializable{
 		this.hostPort = value;
 	}
 	
-	@Column(name = "STATE", unique = false, nullable = false, insertable = true, updatable = true, length = 1)
-	public java.lang.String getState() {
-		return this.state;
+	@Column(name = "CFG_TYPE", unique = false, nullable = false, insertable = true, updatable = true, length = 1)
+	public java.lang.String getCfgType() {
+		return this.cfgType;
 	}
 	
-	public void setState(java.lang.String value) {
-		this.state = value;
+	public void setCfgType(java.lang.String value) {
+		this.cfgType = value;
 	}
 	
 
@@ -122,7 +122,7 @@ public class OpmsHostCfg extends BaseEntity implements java.io.Serializable{
 			.append("HostName",getHostName())
 			.append("HostIp",getHostIp())
 			.append("HostPort",getHostPort())
-			.append("State",getState())
+			.append("CfgType",getCfgType())
 			.toString();
 	}
 	

@@ -92,8 +92,7 @@ public class ServerInfoAction extends BaseAction {
 		caption = caption + "已分配总内存:" + new Double(Runtime.getRuntime().totalMemory() / 1024 / 1024).intValue() + "M ";
 		caption = caption
 				+ "已用内存:"
-				+ new Double((Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1024 / 1024)
-						.intValue() + "M)";
+				+ new Double((Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1024 / 1024).intValue() + "M)";
 		// updateJvmChart(mapping, form, request, response);
 		return SUCCESS;
 	}
@@ -104,16 +103,8 @@ public class ServerInfoAction extends BaseAction {
 	 */
 	@SuppressWarnings("unchecked")
 	public String updateCpuChart() throws Exception {
-		
-    	SysResourceService sysResourceService = WebserviceClient.getServiceClient("192.168.1.2", "22225", "SysResourceService", SysResourceService.class);
-		OSInfo osInfo = sysResourceService.getOSInf();
-		MEMInfo memInfo = sysResourceService.getMemInfo();
-		ArrayList<CPUInfo> cpuInfos = sysResourceService.getCpuInfo();
-		
 		HttpServletRequest request = ServletActionContext.getRequest();
 		HttpServletResponse response = ServletActionContext.getResponse();
-		
-		String ip = request.getParameter("ip");
 		
 		GraphConfig graphConfig = new GraphConfig();
 		graphConfig.put("divLineColor", "44AF31");
@@ -145,7 +136,10 @@ public class ServerInfoAction extends BaseAction {
 		Dto outDto = new BaseDto();
 		outDto.put("success", new Boolean(true));
 		outDto.put("xmlstring_cpu", xmlString);
-		Utils.PrintWrite(response, JsonHelper.encodeObject2Json(outDto));
+		outDto.put("test", "test");
+		String json = JsonHelper.encodeObject2Json(outDto);
+		System.out.println(json);
+		Utils.PrintWrite(response, json);
 //		write(JsonHelper.encodeObject2Json(outDto), response);
 		return SUCCESS;
 	}
@@ -181,7 +175,18 @@ public class ServerInfoAction extends BaseAction {
 		OperatingSystemMXBean osmxb = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
 		long totalvirtualMemory = osmxb.getTotalSwapSpaceSize();
 		long freePhysicalMemorySize = osmxb.getFreePhysicalMemorySize();
-		Double compare = (Double) (1 - freePhysicalMemorySize * 1.0 / totalvirtualMemory) * 100;
+		
+		SysResourceService sysResourceService = WebserviceClient.getServiceClient("192.168.1.2", "22225", "SysResourceService", SysResourceService.class);
+		OSInfo osInfo = sysResourceService.getOSInf();
+		MEMInfo memInfo = sysResourceService.getMemInfo();
+		StringBuffer memJson = new StringBuffer("{");
+		memJson.append("'内存总量':'").append(new Double((memInfo.getMemTotal() / 1024 / 1024)).intValue()).append("M',")
+			.append("'内存使用量':'").append(new Double((memInfo.getMemUsed() / 1024 / 1024)).intValue()).append("M',")
+			.append("'内存空闲量':'").append(new Double((memInfo.getMemFree() / 1024 / 1024)).intValue()).append("M'")
+			.append("}");
+		ArrayList<CPUInfo> cpuInfos = sysResourceService.getCpuInfo();
+		Double compare = (Double) (memInfo.getMemUsed()*1.0/memInfo.getMemTotal()*100);
+//		Double compare = (Double) (1 - freePhysicalMemorySize * 1.0 / totalvirtualMemory) * 100;
 		set0.setValue(compare.intValue() + "");
 		set0.setColor(G4Constants.CHART_COLORS[G4Utils.getRandom(0, 10).intValue()]);
 		dataList.add(set0);
@@ -194,7 +199,10 @@ public class ServerInfoAction extends BaseAction {
 		Dto outDto = new BaseDto();
 		outDto.put("success", new Boolean(true));
 		outDto.put("xmlstring_hostmem", xmlString);
-		Utils.PrintWrite(response, JsonHelper.encodeObject2Json(outDto));
+		outDto.put("MEMInfo", memJson.toString());
+		outDto.put("test", "test");
+		String json = JsonHelper.encodeObject2Json(outDto);
+		Utils.PrintWrite(response, json);
 //		write(JsonHelper.encodeObject2Json(outDto), response);
 		return SUCCESS;
 	}

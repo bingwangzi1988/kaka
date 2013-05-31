@@ -1,16 +1,15 @@
-package com.opms.osgi.service.impl;
+package com.opms.conmg.service.impl;
 
-import java.util.List;
-
-import org.springframework.stereotype.Service;
-
-import com.common.base.BaseServiceImpl;
 import com.common.base.EntityDao;
 import com.common.util.CountOrder;
-import com.opms.osgi.dao.OpmsHostCfgDao;
-import com.opms.osgi.po.OpmsHostCfg;
-import com.opms.osgi.service.OpmsHostCfgService;
-import com.opms.osgi.vo.OpmsHostCfgQuery;
+import com.opms.conmg.dao.OpmsHostCfgDao;
+import com.opms.conmg.po.OpmsHostCfg;
+import com.opms.conmg.service.OpmsHostCfgService;
+import com.opms.conmg.vo.OpmsHostCfgQuery;
+import org.springframework.stereotype.Service;
+import com.common.base.BaseServiceImpl;
+
+import java.util.List;
 
 @Service("opmsHostCfgService")
 public class OpmsHostCfgServiceImpl extends BaseServiceImpl<OpmsHostCfg,String> implements OpmsHostCfgService{

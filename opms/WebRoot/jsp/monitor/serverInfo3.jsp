@@ -4,7 +4,7 @@
 <eRedG4:import src="/jsp/monitor/serverInfo3.js" />
 <eRedG4:body>
 	<eRedG4:flashReport type="L" dataVar="xmlString" id="OSChart" align="center" visible="false" />
-	<eRedG4:flashReport type="L" dataVar="xmlString" id="MemChart" align="center" visible="false" />
+<!-- 	<eRedG4:flashReport type="L" dataVar="xmlString" id="MemChart" align="center" visible="false" /> -->
 	<eRedG4:flashReport type="L" dataVar="xmlString" id="CpuChart" align="center" visible="false" />
 	<eRedG4:flashReport type="L" dataVar="xmlString" id="JavaChart" align="center" visible="false" />
 </eRedG4:body>
