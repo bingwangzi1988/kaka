@@ -9,7 +9,7 @@
 
 	<bean id="activator" class="net.neptune.opms.Activator" init-method="start">
 		<property name="hostIp" value="192.168.1.2"></property>
-		<property name="hostPort" value="22225"></property>
+		<property name="hostPort" value="22226"></property>
 	</bean>
 	
 	<bean id="bundleAdmin" class="net.neptune.opms.impl.BundleAdminImpl"></bean>
